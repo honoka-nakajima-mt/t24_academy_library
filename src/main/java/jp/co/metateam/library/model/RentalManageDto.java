@@ -1,6 +1,7 @@
 package jp.co.metateam.library.model;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,6 +18,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Optional;
+import java.text.ParseException;
 
 /**
  * 貸出管理DTO
@@ -65,6 +67,14 @@ public class RentalManageDto {
         return Optional.empty();
     }
 
+    public Optional<String> validateRentalDate() {
+        Date currentDate = new Date(); // 現在の日時を取得
+        if (this.expectedRentalOn.equals(currentDate) || this.expectedRentalOn.after(currentDate)) {
+            return Optional.empty();
+        } else {
+            return Optional.of("貸出予定日は現在の日時より後の日付を入力してください");
+        }
+    }
     
 
     public Optional<String> isValidRentalStatus(Integer previousRentalStetas) {  

@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
- 
+
+import jakarta.el.ELException;
 import jakarta.validation.Valid;
 import jp.co.metateam.library.model.Account;
 import jp.co.metateam.library.model.RentalManage;
@@ -203,6 +204,13 @@ public class RentalManageController {
             throw new Exception(returnDateValidationError.get());  // バリデーションエラーがある場合は例外をスローする              
         }
 
+        Optional<String> rentalDateValidationError = rentalManageDto.validateRentalDate();
+        if (rentalDateValidationError.isPresent()) {
+            FieldError fieldError = new FieldError("rentalManageDto", "expectedRentalOn", rentalDateValidationError.get());
+            result.addError(fieldError); // エラーをBindingResultに追加する
+            throw new Exception(rentalDateValidationError.get());  // バリデーションエラーがある場合は例外をスローする              
+        }
+        
 
         // 前の貸出ステータスを取得
         RentalManage rentalManage = this.rentalManageService.findById(Long.valueOf(id)); 
@@ -275,23 +283,19 @@ public class RentalManageController {
         for (RentalManage list1 : rentalAvailable1) {
             if (rentalManageDto.getExpectedRentalOn().after(list1.getExpectedRentalOn())|| rentalManageDto.getExpectedRentalOn().after(list1.getRentaledAt()) &&     
                 rentalManageDto.getExpectedRentalOn().before(list1.getExpectedReturnOn())) {
-                return "選択された日付は登録済みの貸出情報と重複しています";
+                    return "選択された日付は登録済みの貸出情報と重複しています";
             }
             if (rentalManageDto.getExpectedReturnOn().after(list1.getExpectedRentalOn()) || rentalManageDto.getExpectedReturnOn().after(list1.getRentaledAt()) &&
                 rentalManageDto.getExpectedReturnOn().before(list1.getExpectedReturnOn())) {
-                            return "選択された日付は登録済みの貸出情報と重複しています";
+                    return "選択された日付は登録済みの貸出情報と重複しています";
             }
         }
         List<RentalManage> rentalAvailable0 = this.rentalManageService.findByStockIdAndStatus0(StockId);
         for (RentalManage list0 : rentalAvailable0) {
-            if (!(rentalManageDto.getExpectedRentalOn().before(list0.getExpectedRentalOn()) || 
-                rentalManageDto.getExpectedRentalOn().after(list0.getExpectedReturnOn()))){
+            if (rentalManageDto.getExpectedRentalOn().before(list0.getExpectedReturnOn()) && 
+                rentalManageDto.getExpectedReturnOn().after(list0.getExpectedRentalOn())) {
                     return "選択された日付は登録済みの貸出情報と重複しています";
-            } 
-            if (!(rentalManageDto.getExpectedReturnOn().before(list0.getExpectedRentalOn()) ||
-                rentalManageDto.getExpectedReturnOn().after(list0.getExpectedReturnOn()))){
-                                return "選択された日付は登録済みの貸出情報と重複しています";
-            }
+        }
         }
         return null;
 }
@@ -305,23 +309,19 @@ public class RentalManageController {
         for (RentalManage list1 : rentalAvailable1) {
             if (rentalManageDto.getExpectedRentalOn().after(list1.getExpectedRentalOn())|| rentalManageDto.getExpectedRentalOn().after(list1.getRentaledAt()) &&     
                   rentalManageDto.getExpectedRentalOn().before(list1.getExpectedReturnOn())) {
-                  return "選択された日付は登録済みの貸出情報と重複しています";
+                    return "選択された日付は登録済みの貸出情報と重複しています";
             }
             if (rentalManageDto.getExpectedReturnOn().after(list1.getExpectedRentalOn()) || rentalManageDto.getExpectedReturnOn().after(list1.getRentaledAt()) &&
                   rentalManageDto.getExpectedReturnOn().before(list1.getExpectedReturnOn())) {
-                            return "選択された日付は登録済みの貸出情報と重複しています";
+                    return "選択された日付は登録済みの貸出情報と重複しています";
             }
         }
 
         List<RentalManage> rentalAvailable0 =this.rentalManageService.findByStockIdAndRentalIdAndStatus0(StockId,retalId);
         for (RentalManage list0 : rentalAvailable0) {
-            if (!(rentalManageDto.getExpectedRentalOn().before(list0.getExpectedRentalOn()) || 
-                  rentalManageDto.getExpectedRentalOn().after(list0.getExpectedReturnOn()))){
+            if (rentalManageDto.getExpectedRentalOn().before(list0.getExpectedReturnOn()) && 
+                rentalManageDto.getExpectedReturnOn().after(list0.getExpectedRentalOn())) {
                     return "選択された日付は登録済みの貸出情報と重複しています";
-            } 
-            if (!(rentalManageDto.getExpectedReturnOn().before(list0.getExpectedRentalOn()) ||
-                  rentalManageDto.getExpectedReturnOn().after(list0.getExpectedReturnOn()))){
-                                return "選択された日付は登録済みの貸出情報と重複しています";
             }
         }
         return null;
