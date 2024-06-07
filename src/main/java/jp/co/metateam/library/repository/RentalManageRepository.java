@@ -54,9 +54,6 @@ public interface RentalManageRepository extends JpaRepository<RentalManage, Long
       " AND ?2 <> rm.id ")                              //かつ貸出管理番号が一致していないもの
     List<RentalManage> findByStockIdAndRentalIdAndStatus1(String StockId, Long retalId);     //StockIdとrentalIdの両方が指定された条件に一致する貸出情報を検索してリストとして返す
 
-    @Query(value = "SELECT rm FROM RentalManage rm WHERE rm.stock.id = ?1 AND rm.status IN (0,1)")
-    List<RentalManage> findByStockId(String StockId);   //指定された在庫IDに紐づく貸出管理情報を検索
-
     @Query
      (value = 
       "SELECT COUNT(*) AS count " +
