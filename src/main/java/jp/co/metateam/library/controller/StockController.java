@@ -23,6 +23,8 @@ import jp.co.metateam.library.service.StockService;
 import jp.co.metateam.library.values.StockStatus;
 import lombok.extern.log4j.Log4j2;
 
+import jp.co.metateam.library.model.CalendarDto;
+
 /**
  * 在庫情報関連クラス
  */
@@ -143,14 +145,15 @@ public class StockController {
         Integer daysInMonth = startDate.lengthOfMonth();
 
         List<Object> daysOfWeek = this.stockService.generateDaysOfWeek(targetYear, targetMonth, startDate, daysInMonth);
-        List<String> stocks = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
+        List<List<CalendarDto>> stocksLists = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
 
         model.addAttribute("targetYear", targetYear);
-        model.addAttribute("targetMonth", targetMonth);
+        model.addAttribute("targetMonth", targetMonth); 
         model.addAttribute("daysOfWeek", daysOfWeek);
         model.addAttribute("daysInMonth", daysInMonth);
 
-        model.addAttribute("stocks", stocks);
+        model.addAttribute("stocksLists", stocksLists);
+        //model.addAttribute("stocks", stocks); 
 
         return "stock/calendar";
     }

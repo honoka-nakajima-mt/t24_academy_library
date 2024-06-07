@@ -1,12 +1,12 @@
 .month_change {
-    width: 300px;
+    width: 250px;
     display: flex;
     justify-content: space-between;
 }
 
 .table_wrapper {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     overflow: scroll;
 }
 #calendar_table {
@@ -34,4 +34,8 @@
 #calendar_table tr.days th {
     padding: 5px;
     font-size: 14px;
+}
+
+.no-underline {
+    text-decoration: none; /* リンクの下線を消す */
 }

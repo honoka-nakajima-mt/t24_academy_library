@@ -20,7 +20,7 @@
                         <a th:href="@{/rental/index}" class="link">← 一覧へ戻る</a>
                     </span>
                 </div>
-                <form id="rental_add_form" th:object="${rentalManageDto}" th:action="@{/rental/add}" method="post">
+                <form id="rental_add_form" th:object="${rentalManageDto}" th:action="@{/rental/add}" method="post" novalidate>
                     <div class="mb30">
                         <label class="input_title" for="employeeId">社員番号<span class="text-red asterisk">＊</span></label>
                         <select id="employeeId" class="form_input" name="employeeId" required>
