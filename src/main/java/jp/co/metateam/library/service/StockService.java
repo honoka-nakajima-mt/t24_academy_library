@@ -136,6 +136,9 @@ public class StockService {
         List<List<CalendarDto>> stockDatesList = new ArrayList<>();        //在庫カレンダー全体のデータを格納するための空のリストstockDatesListsを作成
         List<Object[]> availableStocks = findAllAvailableStockCounts();     //書籍titleごとの在庫数をavailavleStocksリストにセット
 
+        String dayStockNoNum = "×";
+        Calendar calendar = Calendar.getInstance(); 
+
         for (Object[] data : availableStocks) {
             List<CalendarDto> stockCalendarList = new ArrayList<>();        //日付ごとの在庫情報を保持するためのリスト
             String title = (String) data[0];    //在庫のタイトルを取得
@@ -146,7 +149,6 @@ public class StockService {
                 stockCalenderDto.setTitle(title);
                 stockCalenderDto.setStockNum(stockNum);
 
-                Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month - 1, i, 0, 0, 0); // 年月日を設定し、時刻情報をリセット
 
                 Date day = calendar.getTime();      //ExpectedRetnalOnがDate型のためDate型に変換し代入
@@ -160,7 +162,6 @@ public class StockService {
 
                 Long dayStockNum = stockNum - unAvailableCount;
                 if (dayStockNum == 0) {
-                    String dayStockNoNum = "×";
                     stockCalenderDto.setDayStockNum(dayStockNoNum);
                 } else {
                     stockCalenderDto.setDayStockNum(dayStockNum);
