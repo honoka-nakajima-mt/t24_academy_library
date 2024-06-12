@@ -23,7 +23,7 @@
 }
 
 #calendar_table tr th {
-    background-color: #E1E1E2;
+    background-color: #ffffff;
     width: 100%;
 }
 
@@ -38,4 +38,25 @@
 
 .no-underline {
     text-decoration: none; /* リンクの下線を消す */
+}
+
+.saturday {
+    color: blue;
+}
+
+.sunday {
+    color: red;
+}
+
+#calendar_table tr:nth-child(odd) {
+    background-color: #e7e5e5e7; /* グレー色 */ 
+}
+
+#calendar_table tr:nth-child(even) {
+    background-color: #FFFFFF; /* 白色 */
+}
+
+.header_book {
+    text-align: left;
+    vertical-align: bottom;
 }

@@ -136,19 +136,30 @@ public class StockController {
 
     @GetMapping("/stock/calendar")
     public String calendar(@RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, Model model) {
-
-        LocalDate today = year == null || month == null ? LocalDate.now() : LocalDate.of(year, month, 1);
-        Integer targetYear = year == null ? today.getYear() : year;
-        Integer targetMonth = today.getMonthValue();
-
-        LocalDate startDate = LocalDate.of(targetYear, targetMonth, 1);
+        // リクエストパラメータがnullの場合、現在の年月を使用する
+        if (year == null || month == null) {
+                LocalDate today = LocalDate.now();
+                year = today.getYear();
+                month = today.getMonthValue();
+        }
+            
+        // 月の増減の条件分岐を修正
+        if (month < 1) {
+            month = 12; // 12月に設定
+            year--; // 前年にする
+        } else if (month > 12) {
+            month = 1; // 1月に設定
+            year++; // 翌年にする
+        }
+        
+        LocalDate startDate = LocalDate.of(year, month, 1);
         Integer daysInMonth = startDate.lengthOfMonth();
 
-        List<Object> daysOfWeek = this.stockService.generateDaysOfWeek(targetYear, targetMonth, startDate, daysInMonth);
-        List<List<CalendarDto>> stocksLists = this.stockService.generateValues(targetYear, targetMonth, daysInMonth);
+        List<Object> daysOfWeek = this.stockService.generateDaysOfWeek(year, month, startDate, daysInMonth);
+        List<List<CalendarDto>> stocksLists = this.stockService.generateValues(year, month, daysInMonth);
 
-        model.addAttribute("targetYear", targetYear);
-        model.addAttribute("targetMonth", targetMonth); 
+        model.addAttribute("targetYear", year);
+        model.addAttribute("targetMonth", month); 
         model.addAttribute("daysOfWeek", daysOfWeek);
         model.addAttribute("daysInMonth", daysInMonth);
 
